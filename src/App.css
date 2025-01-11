@@ -1,0 +1,42 @@
+.container-fluid {
+  padding: 0;
+}
+.card-body {
+  padding: 0 0.2rem 0.2rem 0;
+}
+.card-text {
+  font-size: 0.8rem;
+  margin-bottom: 0;
+}
+.mt-2 .card-header {
+  padding: 0 0 0 0.4rem;
+}
+.mt-2 {
+  margin-top: 0.2rem !important;
+}
+.row {
+  padding: 0;
+}
+.card-header,
+.list-group .d-flex > div:first-child {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.list-group .list-group-item {
+  border-right: 0;
+  padding: 0.1rem 0 0.1rem 1rem;
+}
+
+.my-card-body {
+  max-height: 100vh;
+  overflow-y: hidden;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+}
+.row {
+  --bs-gutter-x: 0;
+}
+h5 {
+  margin-bottom: 0;
+}
