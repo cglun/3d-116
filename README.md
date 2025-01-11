@@ -22,8 +22,3 @@ Build the app for production:
 npm run build
 ```
 
-Preview the production build locally:
-
-```bash
- 
-```
