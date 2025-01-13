@@ -1,11 +1,25 @@
-import * as THREE from 'three';
+import {
+  BoxGeometry,
+  Camera,
+  DirectionalLight,
+  DirectionalLightHelper,
+  Group,
+  Mesh,
+  MeshLambertMaterial,
+  Object3D,
+  Object3DEventMap,
+  PerspectiveCamera,
+  PlaneGeometry,
+  Scene,
+  WebGLRenderer,
+} from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-let scene: THREE.Scene = new THREE.Scene();
+let scene: Scene = new Scene();
 
-let camera: THREE.PerspectiveCamera, controls: OrbitControls;
+let camera: PerspectiveCamera, controls: OrbitControls;
 
-let renderer = new THREE.WebGLRenderer();
+let renderer = new WebGLRenderer();
 renderer.shadowMap.enabled = true;
 
 function animate() {
@@ -17,13 +31,13 @@ function animate() {
   renderer.render(scene, camera);
 }
 
-let cube: THREE.Mesh;
-let light: THREE.DirectionalLight;
+let cube: Mesh;
+let light: DirectionalLight;
 function addCube() {
   // 创建立方体
-  const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
-  const cubeMaterial = new THREE.MeshLambertMaterial();
-  cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+  const cubeGeometry = new BoxGeometry(1, 1, 1);
+  const cubeMaterial = new MeshLambertMaterial();
+  cube = new Mesh(cubeGeometry, cubeMaterial);
   cube.name = 'cube';
 
   cube.castShadow = true; // 立方体投射阴影
@@ -31,13 +45,13 @@ function addCube() {
   scene.add(cube);
 
   // 添加正交光源
-  light = new THREE.DirectionalLight(0xffffff, 3.5);
+  light = new DirectionalLight(0xffffff, 3.5);
   light.position.set(3, 3, -6);
   light.castShadow = true; // 开启投射阴影
   light.lookAt(cube.position);
   scene.add(light);
 
-  scene.add(new THREE.DirectionalLightHelper(light));
+  scene.add(new DirectionalLightHelper(light));
 
   // 设置阴影参数
   light.shadow.mapSize.width = 2048; // 阴影图的宽度
@@ -50,28 +64,28 @@ function addCube() {
   light.shadow.camera.bottom = -10;
 
   // 创建地面
-  const planeGeometry = new THREE.PlaneGeometry(10, 10);
-  const planeMaterial = new THREE.MeshLambertMaterial({ color: 0xdddddd });
-  const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+  const planeGeometry = new PlaneGeometry(10, 10);
+  const planeMaterial = new MeshLambertMaterial({ color: 0xdddddd });
+  const plane = new Mesh(planeGeometry, planeMaterial);
   plane.receiveShadow = true; // 地面接收阴影
   plane.castShadow = true;
   plane.rotation.x = -Math.PI / 2;
   plane.position.y = -0.5;
   scene.add(plane);
 
-  const p1 = new THREE.Group();
+  const p1 = new Group();
   p1.name = 'group1';
-  const p2 = new THREE.Group();
+  const p2 = new Group();
   p2.name = 'group2';
   p1.add(p2);
-  const p3 = new THREE.Group();
+  const p3 = new Group();
   p3.name = 'group3';
   p2.add(p3);
   scene.add(p1);
 }
 
 function createScene(node: HTMLDivElement) {
-  camera = new THREE.PerspectiveCamera(
+  camera = new PerspectiveCamera(
     75,
     node.offsetWidth / node.offsetHeight,
     0.1,
@@ -91,21 +105,27 @@ function addOrbitControls(): void {
 function setScene(newScene: any) {
   scene = newScene;
 }
-function setCamera(camera1: THREE.Object3D<THREE.Object3DEventMap>) {
+function setCamera(camera1: Object3D<Object3DEventMap>) {
   camera.position.x = camera1.position.x;
   camera.position.y = camera1.position.y;
   camera.position.z = camera1.position.z;
 }
-function getCamera(): THREE.Camera {
+function getCamera(): Camera {
   return camera;
 }
-function getScene(): THREE.Scene {
+function getScene(): Scene {
   return scene;
+}
+function getCube() {
+  console.log(cube);
+
+  return cube;
 }
 export default scene;
 export {
   createScene,
   renderer,
+  getCube,
   camera,
   addOrbitControls,
   cube,

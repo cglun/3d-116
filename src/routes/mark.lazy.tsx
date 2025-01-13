@@ -1,8 +1,9 @@
 import { createLazyFileRoute } from '@tanstack/react-router';
 import { Button } from 'react-bootstrap';
-import * as THREE from 'three';
-import scene, { cube, getScene, setScene } from '../three/threeInit';
+
+import { getScene, setScene } from '../three/threeInit';
 import { getThemeColor } from '../app/config';
+import { Scene } from 'three';
 
 export const Route = createLazyFileRoute('/mark')({
   component: RouteComponent,
@@ -29,7 +30,7 @@ function RouteComponent() {
         onClick={() => {
           localStorage.removeItem('camera');
           localStorage.removeItem('scene');
-          setScene(new THREE.Scene());
+          setScene(new Scene());
         }}
       >
         移除场景

@@ -1,38 +1,24 @@
 import { createContext } from 'react';
-import { DELAY, Modal, APP_COLOR, ToastItem, HTTP_TYPE } from './type';
+import { DELAY, APP_COLOR, ToastBody, ModalBody } from './type';
 
-export type App = {
-  toast: ToastItem;
-  modal: Modal;
-};
+export type Toast = { type: string; toastBody: ToastBody };
+export type Modal = { type: string; ModalBody: ModalBody };
 
-export type Action =
-  | { type: 'toast'; toast: ToastItem }
-  | { type: 'modal'; modal: Modal };
-
-export const initState: App = {
-  toast: {
+export const initToast: Toast = {
+  type: 'toast',
+  toastBody: {
     title: 'title',
     content: 'content',
+    show: false,
     type: APP_COLOR.Success,
     delay: DELAY.MIDDLE,
-    show: false,
-  },
-  modal: {
-    title: '标题',
-    show: false,
-    body: '',
-    action: {
-      url: '',
-      method: HTTP_TYPE.GET,
-    },
   },
 };
 
 export const MyContext = createContext<{
-  state: App;
-  dispatch: React.Dispatch<Action>;
+  toast: Toast;
+  dispatchToast: React.Dispatch<Toast>;
 }>({
-  state: initState,
-  dispatch: () => undefined,
+  toast: initToast,
+  dispatchToast: () => {},
 });

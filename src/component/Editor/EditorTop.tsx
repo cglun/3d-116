@@ -1,23 +1,24 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useState } from 'react';
 import {
   Row,
   Col,
   Button,
   ButtonGroup,
   Dropdown,
-  InputGroup,
-  Form,
   Offcanvas,
 } from 'react-bootstrap';
-import * as THREE from 'three';
 
 import { setClassName } from '../../app/utils';
 import { getThemeColor, initThemeColor, setThemeColor } from '../../app/config';
-import { addCube, getCamera, getScene, setScene } from '../../three/threeInit';
-import { ACTION_TYPE, APP_COLOR, DELAY, HTTP_TYPE } from '../../type';
-import { MyContext } from '../../MyContext';
+import { getCamera, getScene, setScene } from '../../three/threeInit';
+import { APP_COLOR } from '../../type';
+import { initToast, MyContext } from '../../MyContext';
 import ListCard from '../ListCard';
-import useFetch from '../../app/hooks';
+
+import { Scene } from 'three';
+import Toast3d, { Toast, ToastDefault } from '../Toast3d';
+
+import { testData1 } from '../../app/testData';
 
 export default function EditorTop() {
   initThemeColor();
@@ -29,20 +30,20 @@ export default function EditorTop() {
 
   const [appTheme, setAppTheme] = useState(themeColor);
 
-  const { dispatch } = useContext(MyContext);
+  const { dispatchToast } = useContext(MyContext);
   function saveScene() {
     const sceneJson = getScene().toJSON();
     const c = getCamera().toJSON();
 
     localStorage.setItem('scene', JSON.stringify(sceneJson));
     localStorage.setItem('camera', JSON.stringify(c));
-    dispatch({
+    dispatchToast({
       type: 'toast',
-      toast: {
+      toastBody: {
+        ...initToast.toastBody,
         title: '场景',
         content: '场景已保存',
         type: APP_COLOR.Success,
-        delay: DELAY.MIDDLE,
         show: true,
       },
     });
@@ -53,31 +54,13 @@ export default function EditorTop() {
     setThemeColor(color);
     setAppTheme(color);
   }
-  const { data, error, isLoading } = useFetch('type=Scene', HTTP_TYPE.GET);
-  function saveAsNewScene() {
-    dispatch({
-      type: 'modal',
-      modal: {
-        title: '保存场景',
-        show: true,
-        body: (
-          <InputGroup className="mb-3">
-            <InputGroup.Text id="basic-addon1">名称</InputGroup.Text>
-            <Form.Control
-              placeholder="名称"
-              aria-label="Username"
-              aria-describedby="basic-addon1"
-            />
-          </InputGroup>
-        ),
-        action: {
-          targetId: 0,
-          type: ACTION_TYPE.ADD,
-        },
-      },
-    });
-  }
+  //const { data, error, isLoading } =  useFetch('type=Mesh', HTTP_TYPE.GET)
 
+  function saveAsNewScene() {}
+
+  const [toast, setToast] = useState<Toast>({ ...ToastDefault });
+
+  const [list, setList] = useState(testData1);
   return (
     <>
       <Row>
@@ -95,7 +78,7 @@ export default function EditorTop() {
               onClick={() => {
                 localStorage.removeItem('camera');
                 localStorage.removeItem('scene');
-                setScene(new THREE.Scene());
+                setScene(new Scene());
               }}
             >
               <i className={setClassName('plus-square')}></i> 新场景
@@ -105,6 +88,7 @@ export default function EditorTop() {
               size="sm"
               onClick={() => {
                 saveScene();
+                setToast({ ...toast, type: APP_COLOR.Danger, show: true });
               }}
             >
               <i className={setClassName('floppy')}></i> 保存场景
@@ -156,22 +140,27 @@ export default function EditorTop() {
           </>
         </Col>
       </Row>
-      <Offcanvas show={showScene} onHide={handleClose}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>
-            <i className={setClassName('badge-3d')}></i> 所有场景
-          </Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          <ListCard
-            name={'场景'}
-            data={data}
-            action={'删除'}
-            isLoading={isLoading}
-            error={error}
-          ></ListCard>
-        </Offcanvas.Body>
-      </Offcanvas>
+      <Toast3d setToast={setToast} toast={toast}></Toast3d>
+
+      {showScene && (
+        <Offcanvas show={showScene} onHide={handleClose}>
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title>
+              <i className={setClassName('badge-3d')}></i> 所有场景
+            </Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body>
+            <ListCard
+              list={list}
+              setList={setList}
+              getType={{
+                isLoading: false,
+                error: false,
+              }}
+            ></ListCard>
+          </Offcanvas.Body>
+        </Offcanvas>
+      )}
     </>
   );
 }

@@ -18,8 +18,9 @@ export default function BottomNav() {
           </Link>
         </Nav.Item>
         <Nav.Item>
-          <Link to="/test" className="nav-link">
-            <i className={setClassName('dash-circle')}></i> 待续
+          <Link to="/about" className="nav-link">
+            {/* <i className={setClassName('dash-circle')}></i> 关于 */}
+            <i className={setClassName('info-circle')}></i> 关于
           </Link>
         </Nav.Item>
       </Nav>

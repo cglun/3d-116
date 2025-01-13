@@ -39,7 +39,7 @@ export enum DELAY {
   LONG = 3000,
 }
 
-export interface ToastItem {
+export interface ToastBody {
   title: string;
   content: string;
   type: APP_COLOR;
@@ -47,7 +47,7 @@ export interface ToastItem {
   show: boolean;
 }
 
-export interface Modal {
+export interface ModalBody {
   title: string;
   show: boolean;
   body: any;

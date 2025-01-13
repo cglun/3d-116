@@ -1,13 +1,10 @@
-import { Action, App } from '../MyContext';
+import { Toast } from '../MyContext';
 
-export default function reducer(state: App, action: Action): any {
+export default function reducerToast(toast: Toast, action: Toast): any {
   switch (action.type) {
     case 'toast': //login with user info
-      return { ...state, toast: { ...state.toast, ...action.toast } };
-    case 'modal': //logout return true
-      return { ...state, modal: { ...state.modal, ...action.modal } };
-
+      return { ...toast, toastBody: { ...action.toastBody } };
     default:
-      return state;
+      return toast;
   }
 }

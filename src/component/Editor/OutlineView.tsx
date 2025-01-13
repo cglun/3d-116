@@ -1,12 +1,29 @@
-import { getCamera, getScene } from '../three/threeInit';
-import { setClassName } from '../app/utils';
-import * as THREE from 'three';
-import { SPACE } from '../app/config';
-import { Card, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { getCamera, getCube, getScene } from '../../three/threeInit';
+import { setClassName } from '../../app/utils';
+
+import { getThemeColor, SPACE } from '../../app/config';
+import {
+  Accordion,
+  Button,
+  Card,
+  Form,
+  InputGroup,
+  ListGroup,
+  ListGroupItem,
+} from 'react-bootstrap';
 import { useEffect, useState } from 'react';
+import {
+  Camera,
+  Mesh,
+  Object3D,
+  Object3DEventMap,
+  PerspectiveCamera,
+  Vector3,
+} from 'three';
+import ObjectProperty from './ObjectProperty';
 
 export default function OutlineView() {
-  type sceneType = THREE.Object3D<THREE.Object3DEventMap>[];
+  type sceneType = Object3D<Object3DEventMap>[];
   const [sceneList, setSceneList] = useState<sceneType>();
 
   useEffect(() => {
@@ -103,38 +120,31 @@ export default function OutlineView() {
       );
     }
   }
-
+  let [box, setBox] = useState(new Mesh());
   return (
-    <Card className="mx-auto my-card-body">
-      <Card.Header>
-        <h5>
+    <Accordion defaultActiveKey={['0', '1']} alwaysOpen>
+      <Accordion.Item eventKey="0">
+        <Accordion.Header>
           <i className={setClassName('archive')}></i>
-          {SPACE}大纲视图
-        </h5>
-      </Card.Header>
-      <Card.Body>
-        <ListGroup>
-          {cameraDiv()}
-          {sceneList && Menu(sceneList, 'block')}
-        </ListGroup>
-        <Card className="mt-3">
-          <Card.Header>
-            <h5>
-              <i className={setClassName('menu-button')}></i>
-              {SPACE}属性
-            </h5>
-          </Card.Header>
-          <Card.Body>
-            <ListGroup>
-              <ListGroupItem>ff</ListGroupItem>
-              <ListGroupItem>ff</ListGroupItem>
-              <ListGroupItem>ff</ListGroupItem>
-              <ListGroupItem>ff</ListGroupItem>
-              <ListGroupItem>ff</ListGroupItem>
-            </ListGroup>
-          </Card.Body>
-        </Card>
-      </Card.Body>
-    </Card>
+          <span className="px-2">大纲视图</span>
+        </Accordion.Header>
+        <Accordion.Body className="outline-view">
+          <ListGroup>
+            {cameraDiv()}
+            {sceneList && Menu(sceneList, 'block')}
+          </ListGroup>
+        </Accordion.Body>
+      </Accordion.Item>
+      <Button
+        onClick={() => {
+          setBox(getCube());
+        }}
+      >
+        选择box
+      </Button>
+
+      <ObjectProperty selectedObj={box} />
+    </Accordion>
   );
 }
+//分配给类型“IntrinsicAttributes & Camera

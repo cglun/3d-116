@@ -23,9 +23,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.list-group .list-group-item {
-  border-right: 0;
-  padding: 0.1rem 0 0.1rem 1rem;
+.outline-view .list-group .list-group-item {
+  padding: 0.1rem 0.2rem 0.1rem 1rem;
 }
 
 .my-card-body {
@@ -33,6 +32,9 @@
   overflow-y: hidden;
   overflow-y: scroll;
   scrollbar-width: thin;
+}
+.card-body img{
+  width: 6rem;
 }
 .row {
   --bs-gutter-x: 0;

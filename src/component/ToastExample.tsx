@@ -1,53 +1,54 @@
 import { Toast } from 'react-bootstrap';
-import { initState, MyContext } from '../MyContext';
-import { useContext } from 'react';
-import { DELAY, APP_COLOR } from '../type';
+import { initToast, MyContext } from '../MyContext';
+import { useContext, memo } from 'react';
+import { APP_COLOR } from '../type';
 import { setClassName } from '../app/utils';
+/**
+ * 消息提示
+ * @returns
+ */
 
 function ToastExample() {
-  const { state, dispatch } = useContext(MyContext);
-
-  const { toast } = state;
+  const { toast, dispatchToast } = useContext(MyContext);
+  const { toastBody } = toast;
 
   let iconClassName = setClassName('info-circle');
-  if (toast.type === APP_COLOR.Success) {
+  if (toastBody.type === APP_COLOR.Success) {
     iconClassName = setClassName('check-circle');
   }
 
   return (
-    toast.show && (
+    toastBody.show && (
       <div className="fixed-top py-2">
         <Toast
           className="mx-auto"
           onClose={() => {
-            dispatch({
+            dispatchToast({
               type: 'toast',
-              toast: {
+              toastBody: {
+                ...initToast.toastBody,
                 title: 'title',
                 content: 'content',
-                type: APP_COLOR.Success,
-                delay: DELAY.MIDDLE,
-                show: false,
               },
             });
           }}
-          show={toast.show}
-          delay={toast.delay}
-          bg={toast.type}
+          show={toastBody.show}
+          delay={toastBody.delay}
+          bg={toastBody.type}
           autohide
         >
           <Toast.Header>
             <i className={setClassName('info-circle') + ' me-1'}></i>
-            <strong className="me-auto ">{toast.title}</strong>
+            <strong className="me-auto ">{toastBody.title}</strong>
           </Toast.Header>
           <Toast.Body
-            className={toast.type.toString() === 'Dark' ? 'text-white' : ''}
+            className={toastBody.type.toString() === 'Dark' ? 'text-white' : ''}
           >
-            <i className={iconClassName}></i> {toast.content}
+            {toastBody.content}
           </Toast.Body>
         </Toast>
       </div>
     )
   );
 }
-export default ToastExample;
+export default memo(ToastExample);
