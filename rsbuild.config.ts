@@ -15,7 +15,7 @@ export default defineConfig({
   output: {
     distPath: {
       // root: '../datav-assembly/webapp/build/',
-      root: '../datav-assembly/webapp/',
+      //root: '../datav-assembly/webapp/',
     },
   },
 });
