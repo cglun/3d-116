@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { DELAY, APP_COLOR, ToastBody, ModalBody } from './type';
+import { DELAY, APP_COLOR, ToastBody, ModalBody } from '../type';
 
 export type Toast = { type: string; toastBody: ToastBody };
 export type Modal = { type: string; ModalBody: ModalBody };

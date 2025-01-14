@@ -8,8 +8,9 @@ import {
   setScene,
 } from '../../three/threeInit';
 import { ObjectLoader } from 'three/src/loaders/ObjectLoader.js';
+import { ViewType } from '../../type';
 
-export default function Canvas3d() {
+export default function Canvas3d({ viewType = 'editor' }) {
   const canvas: React.RefObject<HTMLDivElement> = useRef<any>({});
   useEffect(() => {
     const s = localStorage.getItem('scene');
@@ -41,6 +42,8 @@ export default function Canvas3d() {
       renderer.setSize(canvas.current.offsetWidth, canvas.current.offsetHeight); // 更新渲染器的大小
     }
   }
-
-  return <div style={{ height: '70vh' }} ref={canvas}></div>;
+  if (viewType === 'editor') {
+    return <div style={{ height: '70vh' }} ref={canvas}></div>;
+  }
+  return <div style={{ height: '100vh', width: '100vw' }} ref={canvas}></div>;
 }

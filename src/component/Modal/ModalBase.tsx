@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import Button from 'react-bootstrap/Button';
 
 import Modal from 'react-bootstrap/Modal';
-import { MyContext } from '../../MyContext';
+import { MyContext } from '../../app/MyContext';
 
 import { getThemeColor } from '../../app/config';
 import { setClassName } from '../../app/utils';

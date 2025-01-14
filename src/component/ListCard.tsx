@@ -124,7 +124,9 @@ function ItemInfoCard(props: Props) {
       {list.map((item: ItemInfo, index: number) => {
         return (
           <Card className="ms-2 mt-2" key={index}>
-            <Card.Header title={item.name}>{item.name}</Card.Header>
+            <Card.Header style={{ width: '6rem' }} title={item.name}>
+              {item.name}
+            </Card.Header>
             <Card.Body className="d-flex flex-column ">
               <Card.Img src={'/assets/images/test.png'} variant="top" />
               <ButtonGroup aria-label="Basic example" className="mt-2">

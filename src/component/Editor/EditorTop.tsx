@@ -12,13 +12,14 @@ import { setClassName } from '../../app/utils';
 import { getThemeColor, initThemeColor, setThemeColor } from '../../app/config';
 import { getCamera, getScene, setScene } from '../../three/threeInit';
 import { APP_COLOR } from '../../type';
-import { initToast, MyContext } from '../../MyContext';
+import { initToast, MyContext } from '../../app/MyContext';
 import ListCard from '../ListCard';
 
 import { Scene } from 'three';
 import Toast3d, { Toast, ToastDefault } from '../Toast3d';
 
 import { testData1 } from '../../app/testData';
+import { Link } from '@tanstack/react-router';
 
 export default function EditorTop() {
   initThemeColor();
@@ -102,6 +103,11 @@ export default function EditorTop() {
             >
               <i className={setClassName('floppy2')}></i> 场景另存
             </Button>
+            <a href="/?t=view" target="_blank">
+              <Button variant={themeColor} size="sm">
+                <i className={setClassName('eye')}></i> 预览3D
+              </Button>{' '}
+            </a>
             <Button variant={themeColor} size="sm">
               <i className={setClassName('dash-circle')}></i> 待续
             </Button>

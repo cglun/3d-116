@@ -1,5 +1,5 @@
 import { Toast } from 'react-bootstrap';
-import { initToast, MyContext } from '../MyContext';
+import { initToast, MyContext } from '../app/MyContext';
 import { useContext, memo } from 'react';
 import { APP_COLOR } from '../type';
 import { setClassName } from '../app/utils';

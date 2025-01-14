@@ -14,6 +14,7 @@ import {
 import { useEffect, useState } from 'react';
 import {
   Camera,
+  Light,
   Mesh,
   Object3D,
   Object3DEventMap,
@@ -21,7 +22,9 @@ import {
   Vector3,
 } from 'three';
 import ObjectProperty from './ObjectProperty';
-
+import { setObjectName } from '../../three/utils';
+let currentSelectDiv: { classList: { remove: (arg0: string) => void } } | null =
+  null;
 export default function OutlineView() {
   type sceneType = Object3D<Object3DEventMap>[];
   const [sceneList, setSceneList] = useState<sceneType>();
@@ -34,17 +37,12 @@ export default function OutlineView() {
 
   function getLogo(item: any) {
     let logo = 'hexagon';
-    if (item.isMesh) {
-      logo = 'box';
-    }
+    if (item.isMesh) logo = 'box';
 
-    if (item.isGroup) {
-      logo = 'collection';
-    }
+    if (item.isGroup) logo = 'collection';
 
-    if (item.isLight) {
-      logo = 'lightbulb';
-    }
+    if (item.isLight) logo = 'lightbulb';
+
     return <i className={setClassName(logo)}></i>;
   }
 
@@ -57,7 +55,13 @@ export default function OutlineView() {
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
+            setCurrentlySelected(item);
 
+            if (currentSelectDiv !== null) {
+              currentSelectDiv.classList.remove('text-warning');
+            }
+            currentSelectDiv = e.currentTarget;
+            e.currentTarget.classList.add('text-warning');
             //展开
             if (item.children.length > 0) {
               const current = e.currentTarget.children[1];
@@ -70,6 +74,7 @@ export default function OutlineView() {
                   ? current.setAttribute('style', 'display:none')
                   : current.setAttribute('style', 'display:block');
               }
+
               {
                 expandButton
                   .getAttribute('class')
@@ -91,7 +96,7 @@ export default function OutlineView() {
           <div className="d-flex justify-content-between">
             <div>
               {getLogo(item)} {SPACE}
-              {item.name.trim().length === 0 ? item.type : item.name}
+              {setObjectName(item)}
             </div>
             <div>
               {item.children.length > 0 && (
@@ -106,21 +111,32 @@ export default function OutlineView() {
   }
   function cameraDiv() {
     const camera = getCamera();
+
     if (camera && camera.isCamera) {
       return (
         <ListGroup.Item
           as={'button'}
-          className=" d-flex justify-content-between "
+          className=" d-flex justify-content-between"
+          onClick={(e) => {
+            if (currentSelectDiv !== null) {
+              currentSelectDiv.classList.remove('text-warning');
+            }
+            currentSelectDiv = e.currentTarget;
+            e.currentTarget.classList.add('text-warning');
+            setCurrentlySelected(camera);
+          }}
         >
           <div>
             <i className={setClassName('camera-reels')}></i>
-            {SPACE}相机
+            {SPACE}
+            {setObjectName(camera)}
           </div>
         </ListGroup.Item>
       );
     }
   }
-  let [box, setBox] = useState(new Mesh());
+
+  let [currentlySelected, setCurrentlySelected] = useState(null);
   return (
     <Accordion defaultActiveKey={['0', '1']} alwaysOpen>
       <Accordion.Item eventKey="0">
@@ -129,22 +145,26 @@ export default function OutlineView() {
           <span className="px-2">大纲视图</span>
         </Accordion.Header>
         <Accordion.Body className="outline-view">
-          <ListGroup>
-            {cameraDiv()}
-            {sceneList && Menu(sceneList, 'block')}
-          </ListGroup>
+          <Card>
+            <Card.Header className="text-center">相机</Card.Header>
+            <Card.Body>
+              <ListGroup>{cameraDiv()}</ListGroup>
+            </Card.Body>
+          </Card>
+
+          <Card>
+            <Card.Header className="text-center">网格</Card.Header>
+            <Card.Body>
+              <ListGroup>{sceneList && Menu(sceneList, 'block')} </ListGroup>
+            </Card.Body>
+          </Card>
         </Accordion.Body>
       </Accordion.Item>
-      <Button
-        onClick={() => {
-          setBox(getCube());
-        }}
-      >
-        选择box
-      </Button>
 
-      <ObjectProperty selectedObj={box} />
+      <ObjectProperty
+        currentlySelected={currentlySelected}
+        setCurrentlySelected={setCurrentlySelected}
+      />
     </Accordion>
   );
 }
-//分配给类型“IntrinsicAttributes & Camera

@@ -65,3 +65,4 @@ export enum ACTION_TYPE {
   DELETE = 'DELETE',
   UPDATE = 'UPDATE',
 }
+export type ViewType = string | null;

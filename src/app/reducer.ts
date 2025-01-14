@@ -1,4 +1,4 @@
-import { Toast } from '../MyContext';
+import { Toast } from './MyContext';
 
 export default function reducerToast(toast: Toast, action: Toast): any {
   switch (action.type) {

@@ -91,6 +91,7 @@ function createScene(node: HTMLDivElement) {
     0.1,
     1000,
   );
+  camera.name = '透视相机';
 
   renderer.setSize(node.offsetWidth, node.offsetHeight);
   camera.position.set(3, 4, 5);

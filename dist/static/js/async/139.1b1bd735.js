@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_3d_116=self.webpackChunk_3d_116||[]).push([["139"],{2886:function(e,t,n){n.r(t),n.d(t,{Route:function(){return c}});var s=n(5893),u=n(9627),r=n(4877),i=n(7294),o=n(7410);let c=(0,u.k0)("/")({component:function(){let[e,t]=i.useState(o.F);return(0,s.jsx)(r.Z,{list:e,setList:t,getType:{isLoading:!1,error:!1}})}})}}]);
