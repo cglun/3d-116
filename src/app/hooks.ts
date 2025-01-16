@@ -31,7 +31,7 @@ function useFetch(url: string, type: HTTP_TYPE) {
       })
       .then((data) => {
         setData(data.payload);
-        console.log(data);
+        //console.log(data);
       })
       .catch((error) => {
         setError(error);

@@ -1,54 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Accordion, Card, Form, InputGroup } from 'react-bootstrap';
-import { Object3D, Vector3 } from 'three';
+import { Euler, Object3D, Vector3 } from 'three';
 import { setClassName } from '../../app/utils';
-import { getCube } from '../../three/threeInit';
-import { setObjectName } from '../../three/utils';
+
+import { getObjectNameByName } from '../../three/utils';
 /**
  * 物体属性
  * @returns
  */
-type currentlySelected = Object3D | any;
 
-export default function ObjectProperty({
-  currentlySelected,
-  setCurrentlySelected,
-}) {
-  function inputItem(v: Vector3, t: string) {
-    return (
-      <InputGroup size="sm">
-        <InputGroup.Text>x</InputGroup.Text>
-        <Form.Control
-          aria-label="Small"
-          aria-describedby="inputGroup-sizing-sm"
-          placeholder={'3'}
-          type="number"
-          title={'3'}
-        />
-      </InputGroup>
-    );
-  }
-  debugger;
+export default function ObjectProperty({ curObj3d }: { curObj3d: Object3D }) {
   return (
-    currentlySelected && (
+    curObj3d && (
       <Accordion.Item eventKey="1">
         <Accordion.Header>
           <i className={setClassName('menu-button')}></i>
           <span className="px-2 ellipsis-3d">
-            属性-{setObjectName(currentlySelected)}
+            属性-{getObjectNameByName(curObj3d)}
           </span>
         </Accordion.Header>
         <Accordion.Body>
           <Object3dInput
-            position={currentlySelected.position}
+            transform={curObj3d.position}
             title={'位置'}
           ></Object3dInput>
           <Object3dInput
-            position={currentlySelected.rotation}
+            transform={curObj3d.rotation}
             title={'旋转'}
           ></Object3dInput>
           <Object3dInput
-            position={currentlySelected.scale}
+            transform={curObj3d.scale}
             title={'缩放'}
           ></Object3dInput>
         </Accordion.Body>
@@ -61,16 +42,22 @@ function isScale(title: string) {
   return '缩放' === title ? true : false;
 }
 
-function Object3dInput({ position = new Vector3(0, 0, 0), title = '位置' }) {
+function Object3dInput({
+  transform,
+  title = '位置',
+}: {
+  transform: Vector3 | Euler;
+  title?: string;
+}) {
   const [checked, setChecked] = useState(true);
   const [lockValue, setLockValue] = useState(0);
   const _isScale = isScale(title);
-  function setValue(xx) {
+  function setValue(value: number) {
     if (checked && _isScale) {
-      setLockValue(xx);
-      position.x = xx;
-      position.y = xx;
-      position.z = xx;
+      setLockValue(value);
+      transform.x = value;
+      transform.y = value;
+      transform.z = value;
       return;
     }
   }
@@ -98,12 +85,12 @@ function Object3dInput({ position = new Vector3(0, 0, 0), title = '位置' }) {
           <Form.Control
             aria-label="Small"
             aria-describedby="inputGroup-sizing-sm"
-            placeholder={position.x.toString()}
+            placeholder={transform.x.toString()}
             type="number"
-            title={position.x.toString()}
+            title={transform.x.toString()}
             onChange={(e) => {
               setValue(parseInt(e.target.value));
-              position.x = parseInt(e.target.value);
+              transform.x = parseInt(e.target.value);
             }}
           />
         </InputGroup>
@@ -112,15 +99,17 @@ function Object3dInput({ position = new Vector3(0, 0, 0), title = '位置' }) {
           <Form.Control
             aria-label="Small"
             aria-describedby="inputGroup-sizing-sm"
-            placeholder={position.y.toString()}
+            placeholder={transform.y.toString()}
             type="number"
             disabled={_isScale && checked}
             title={
-              _isScale && checked ? lockValue.toString() : position.y.toString()
+              _isScale && checked
+                ? lockValue.toString()
+                : transform.y.toString()
             }
             onChange={(e) => {
               setValue(parseInt(e.target.value));
-              position.y = parseInt(e.target.value);
+              transform.y = parseInt(e.target.value);
             }}
           />
         </InputGroup>
@@ -129,15 +118,17 @@ function Object3dInput({ position = new Vector3(0, 0, 0), title = '位置' }) {
           <Form.Control
             aria-label="Small"
             aria-describedby="inputGroup-sizing-sm"
-            placeholder={position.z.toString()}
+            placeholder={transform.z.toString()}
             type="number"
             disabled={_isScale && checked}
             title={
-              _isScale && checked ? lockValue.toString() : position.z.toString()
+              _isScale && checked
+                ? lockValue.toString()
+                : transform.z.toString()
             }
             onChange={(e) => {
               setValue(parseInt(e.target.value));
-              position.z = parseInt(e.target.value);
+              transform.z = parseInt(e.target.value);
             }}
           />
         </InputGroup>

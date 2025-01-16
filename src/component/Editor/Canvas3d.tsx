@@ -3,12 +3,15 @@ import {
   addCube,
   camera,
   createScene,
+  getCamera,
+  getScene,
   renderer,
   setCamera,
   setScene,
 } from '../../three/threeInit';
 import { ObjectLoader } from 'three/src/loaders/ObjectLoader.js';
-import { ViewType } from '../../type';
+
+import { runScript } from '../../three/scriptDev';
 
 export default function Canvas3d({ viewType = 'editor' }) {
   const canvas: React.RefObject<HTMLDivElement> = useRef<any>({});
@@ -23,6 +26,21 @@ export default function Canvas3d({ viewType = 'editor' }) {
         setScene(new ObjectLoader().parse(JSON.parse(s)));
 
         setCamera(new ObjectLoader().parse(JSON.parse(c)));
+        const camera = getCamera();
+        const scene = getScene();
+        if (import.meta.env.MODE === 'development') {
+          runScript({ camera: camera, scene: scene });
+        }
+        eval(`
+  const cube = scene.getObjectByName('cube');
+  if (cube !== undefined) { 
+  cube.position.z+= 2;
+    setInterval(() => {
+      cube.rotation.y += 0.5;
+     
+    }, 50);
+  }
+`);
       } else {
         createScene(canvas.current);
         addCube();

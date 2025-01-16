@@ -3,6 +3,8 @@ import { createLazyFileRoute } from '@tanstack/react-router';
 import { Button, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { setClassName } from '../app/utils';
 import { getThemeColor } from '../app/config';
+import AlertBase from '../component/AlertBase';
+import { APP_COLOR } from '../type';
 
 export const Route = createLazyFileRoute('/about')({
   component: RouteComponent,
@@ -32,7 +34,16 @@ function RouteComponent() {
           </Button>
         </a>
       </ListGroupItem>
-      <ListGroupItem></ListGroupItem>
+      <ListGroupItem>
+        <div>
+          <AlertBase
+            type={APP_COLOR.Success}
+            text={
+              '【名称：3d116】【版本：1.1.6】【制作：李论】【先定个小目标，活个116岁】'
+            }
+          ></AlertBase>
+        </div>
+      </ListGroupItem>
     </ListGroup>
   );
 }

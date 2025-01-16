@@ -16,11 +16,18 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
+const TreeLazyImport = createFileRoute('/tree')()
 const MarkLazyImport = createFileRoute('/mark')()
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
+
+const TreeLazyRoute = TreeLazyImport.update({
+  id: '/tree',
+  path: '/tree',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/tree.lazy').then((d) => d.Route))
 
 const MarkLazyRoute = MarkLazyImport.update({
   id: '/mark',
@@ -65,6 +72,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarkLazyImport
       parentRoute: typeof rootRoute
     }
+    '/tree': {
+      id: '/tree'
+      path: '/tree'
+      fullPath: '/tree'
+      preLoaderRoute: typeof TreeLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -74,12 +88,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
   '/mark': typeof MarkLazyRoute
+  '/tree': typeof TreeLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
   '/mark': typeof MarkLazyRoute
+  '/tree': typeof TreeLazyRoute
 }
 
 export interface FileRoutesById {
@@ -87,14 +103,15 @@ export interface FileRoutesById {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
   '/mark': typeof MarkLazyRoute
+  '/tree': typeof TreeLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/mark'
+  fullPaths: '/' | '/about' | '/mark' | '/tree'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/mark'
-  id: '__root__' | '/' | '/about' | '/mark'
+  to: '/' | '/about' | '/mark' | '/tree'
+  id: '__root__' | '/' | '/about' | '/mark' | '/tree'
   fileRoutesById: FileRoutesById
 }
 
@@ -102,12 +119,14 @@ export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   AboutLazyRoute: typeof AboutLazyRoute
   MarkLazyRoute: typeof MarkLazyRoute
+  TreeLazyRoute: typeof TreeLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   AboutLazyRoute: AboutLazyRoute,
   MarkLazyRoute: MarkLazyRoute,
+  TreeLazyRoute: TreeLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -122,7 +141,8 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/about",
-        "/mark"
+        "/mark",
+        "/tree"
       ]
     },
     "/": {
@@ -133,6 +153,9 @@ export const routeTree = rootRoute
     },
     "/mark": {
       "filePath": "mark.lazy.tsx"
+    },
+    "/tree": {
+      "filePath": "tree.lazy.tsx"
     }
   }
 }

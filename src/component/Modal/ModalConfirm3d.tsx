@@ -8,7 +8,7 @@ import AlertBase from '../AlertBase';
 
 export interface ModalConfirm {
   title: string;
-  content: string;
+
   show: boolean;
   type: APP_COLOR;
 
@@ -16,7 +16,7 @@ export interface ModalConfirm {
 }
 export const ModalConfirmDefault: ModalConfirm = {
   title: '标题',
-  content: '内容',
+
   show: false,
   type: APP_COLOR.Danger,
 

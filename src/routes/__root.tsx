@@ -2,18 +2,17 @@ import { createRootRoute } from '@tanstack/react-router';
 
 import { Col, Container, Row } from 'react-bootstrap';
 
-import { Toast, initToast, MyContext } from '../app/MyContext';
-import reducer from '../app/reducer';
+import { initToast, MyContext } from '../app/MyContext';
 
 import OutlineView from '../component/Editor/OutlineView';
 import Canvas3d from '../component/Editor/Canvas3d';
 import EditorTop from '../component/Editor/EditorTop';
 import BottomNav from '../component/Editor/BottomNav';
 import ToastExample from '../component/ToastExample';
-import ModalBase from '../component/Modal/ModalBase';
+
 import React from 'react';
 import reducerToast from '../app/reducer';
-import { APP_COLOR, ViewType } from '../type';
+import { APP_COLOR } from '../type';
 import AlertBase from '../component/AlertBase';
 
 export const Route = createRootRoute({
@@ -22,7 +21,7 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   const [toast, dispatchToast] = React.useReducer(reducerToast, initToast);
-  document.title = '3D编辑器';
+  document.title = '3D116';
   function getQueryParam(param: any) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);

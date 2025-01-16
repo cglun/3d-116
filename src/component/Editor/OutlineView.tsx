@@ -9,106 +9,58 @@ import {
   Form,
   InputGroup,
   ListGroup,
-  ListGroupItem,
 } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
-import {
-  Camera,
-  Light,
-  Mesh,
-  Object3D,
-  Object3DEventMap,
-  PerspectiveCamera,
-  Vector3,
-} from 'three';
+import { Object3D } from 'three';
 import ObjectProperty from './ObjectProperty';
-import { setObjectName } from '../../three/utils';
-let currentSelectDiv: { classList: { remove: (arg0: string) => void } } | null =
-  null;
+import { getObjectNameByName } from '../../three/utils';
+import TreeList from './TreeList';
+
+let lastSelectDiv: (EventTarget & Element) | null = null;
 export default function OutlineView() {
-  type sceneType = Object3D<Object3DEventMap>[];
-  const [sceneList, setSceneList] = useState<sceneType>();
+  let [children, setChildren] = useState<Object3D[]>();
+  let [curObj3d, setCurObj3d] = useState<Object3D>();
+  //  let curObj3d: Object3D | null = null;
+
+  const treeData = [
+    {
+      id: 1,
+      name: 'Node 1',
+      children: [
+        {
+          id: 2,
+          name: 'Node 1.1',
+          children: [
+            {
+              id: 3,
+              name: 'Node 1.1.1',
+            },
+          ],
+        },
+        {
+          id: 4,
+          name: 'Node 1.2',
+        },
+      ],
+    },
+    {
+      id: 5,
+      name: 'Node 2',
+      children: [
+        {
+          id: 6,
+          name: 'Node 2.1',
+        },
+      ],
+    },
+  ];
 
   useEffect(() => {
-    const children = getScene().children;
+    const _children = getScene().children;
 
-    setSceneList(children);
+    setChildren(setD2(_children));
   }, []);
 
-  function getLogo(item: any) {
-    let logo = 'hexagon';
-    if (item.isMesh) logo = 'box';
-
-    if (item.isGroup) logo = 'collection';
-
-    if (item.isLight) logo = 'lightbulb';
-
-    return <i className={setClassName(logo)}></i>;
-  }
-
-  function Menu(sceneList: sceneType, show: string) {
-    return sceneList.map((item, index) => {
-      return (
-        <ListGroupItem
-          key={index}
-          style={{ display: show, cursor: 'pointer' }}
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            setCurrentlySelected(item);
-
-            if (currentSelectDiv !== null) {
-              currentSelectDiv.classList.remove('text-warning');
-            }
-            currentSelectDiv = e.currentTarget;
-            e.currentTarget.classList.add('text-warning');
-            //展开
-            if (item.children.length > 0) {
-              const current = e.currentTarget.children[1];
-
-              const expandButton =
-                e.currentTarget.children[0].children[1].children[0];
-
-              {
-                current.getAttribute('style')?.includes('display:block')
-                  ? current.setAttribute('style', 'display:none')
-                  : current.setAttribute('style', 'display:block');
-              }
-
-              {
-                expandButton
-                  .getAttribute('class')
-                  ?.includes('bi bi-plus-square')
-                  ? expandButton.setAttribute(
-                      'class',
-                      setClassName('dash-square'),
-                    )
-                  : expandButton.setAttribute(
-                      'class',
-                      setClassName('plus-square'),
-                    );
-              }
-
-              // current.setAttribute('style', 'display:block');
-            }
-          }}
-        >
-          <div className="d-flex justify-content-between">
-            <div>
-              {getLogo(item)} {SPACE}
-              {setObjectName(item)}
-            </div>
-            <div>
-              {item.children.length > 0 && (
-                <i className={setClassName('plus-square')}></i>
-              )}
-            </div>
-          </div>
-          {item.children.length > 0 && Menu(item.children, 'none')}
-        </ListGroupItem>
-      );
-    });
-  }
   function cameraDiv() {
     const camera = getCamera();
 
@@ -118,25 +70,25 @@ export default function OutlineView() {
           as={'button'}
           className=" d-flex justify-content-between"
           onClick={(e) => {
-            if (currentSelectDiv !== null) {
-              currentSelectDiv.classList.remove('text-warning');
+            if (lastSelectDiv !== null) {
+              lastSelectDiv.classList.remove('text-warning');
             }
-            currentSelectDiv = e.currentTarget;
-            e.currentTarget.classList.add('text-warning');
-            setCurrentlySelected(camera);
+            const curSel = e.currentTarget;
+            curSel.classList.add('text-warning');
+            lastSelectDiv = curSel;
+            setCurObj3d(camera);
           }}
         >
           <div>
             <i className={setClassName('camera-reels')}></i>
             {SPACE}
-            {setObjectName(camera)}
+            {getObjectNameByName(camera)}
           </div>
         </ListGroup.Item>
       );
     }
   }
 
-  let [currentlySelected, setCurrentlySelected] = useState(null);
   return (
     <Accordion defaultActiveKey={['0', '1']} alwaysOpen>
       <Accordion.Item eventKey="0">
@@ -155,16 +107,28 @@ export default function OutlineView() {
           <Card>
             <Card.Header className="text-center">网格</Card.Header>
             <Card.Body>
-              <ListGroup>{sceneList && Menu(sceneList, 'block')} </ListGroup>
+              <ListGroup className="da-gang">
+                {children && (
+                  <TreeList data={children} setCurObj3d={setCurObj3d} />
+                )}
+              </ListGroup>
             </Card.Body>
           </Card>
         </Accordion.Body>
       </Accordion.Item>
 
-      <ObjectProperty
-        currentlySelected={currentlySelected}
-        setCurrentlySelected={setCurrentlySelected}
-      />
+      <ObjectProperty curObj3d={curObj3d} />
     </Accordion>
   );
+}
+export function setD2(children, show = true, isOpen = true) {
+  return children.map((item) => {
+    item.userData.show = show;
+    item.userData.isOpen = isOpen;
+    if (item.children.length > 0) {
+      item.userData.isOpen = false;
+      setD2(item.children, false);
+    }
+    return item;
+  });
 }

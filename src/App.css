@@ -24,7 +24,7 @@
   text-overflow: ellipsis;
 }
 .outline-view .list-group .list-group-item {
-  padding: 0.1rem 0.2rem 0.1rem 1rem;
+  padding: 0.1rem 0.2rem  ;
 }
 
 .my-card-body {
@@ -44,4 +44,10 @@ h5 {
 }
 .accordion-body{
    padding:.5rem
+}
+.da-gang .list-group-item{
+  cursor: pointer;
+}
+svg{
+  width: 1rem;
 }
