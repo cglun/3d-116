@@ -4,7 +4,6 @@ import {
   DirectionalLight,
   DirectionalLightHelper,
   Group,
-  LoadingManager,
   Mesh,
   MeshLambertMaterial,
   Object3D,
@@ -14,15 +13,13 @@ import {
   Scene,
   WebGLRenderer,
 } from 'three';
-import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { getObjectNameByName } from './utils';
 
 let scene: Scene = new Scene();
 
 let camera: PerspectiveCamera, controls: OrbitControls;
 
-let renderer = new WebGLRenderer();
+let renderer: WebGLRenderer = new WebGLRenderer();
 renderer.shadowMap.enabled = true;
 
 function animate() {
@@ -137,26 +134,10 @@ function getCube() {
 }
 
 function addGlb() {
-  const l = new GLTFLoader();
-
-  l.load('/assets/models/blender.glb', (data) => {
-    //console.log(data);
-    scene.add(data.scene);
-
-    //console.log(scene);
-
-    // getm(data.scene.children);
-  });
-}
-
-function getm(_data) {
-  _data.forEach((item) => {
-    if (item.children.length > 0) {
-      getm(item.children);
-    } else {
-      item.name = getObjectNameByName(item);
-    }
-  });
+  // const load = new GLTFLoader(new LoadingManager());
+  // load.load('/assets/models/blender.glb', (data) => {
+  //   scene.add(data.scene);
+  // });
 }
 
 export default scene;

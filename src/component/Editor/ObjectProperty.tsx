@@ -9,7 +9,11 @@ import { getObjectNameByName } from '../../three/utils';
  * @returns
  */
 
-export default function ObjectProperty({ curObj3d }: { curObj3d: Object3D }) {
+export default function ObjectProperty({
+  curObj3d,
+}: {
+  curObj3d: Object3D | any;
+}) {
   return (
     curObj3d && (
       <Accordion.Item eventKey="1">

@@ -1,81 +1,37 @@
-import { getCamera, getCube, getScene } from '../../three/threeInit';
+import { getCamera, getScene } from '../../three/init3d116';
 import { setClassName } from '../../app/utils';
 
-import { getThemeColor, SPACE } from '../../app/config';
-import {
-  Accordion,
-  Button,
-  Card,
-  Form,
-  InputGroup,
-  ListGroup,
-} from 'react-bootstrap';
+import { SPACE } from '../../app/config';
+import { Accordion, Card, ListGroup } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
-import { Object3D } from 'three';
+import { Camera, Object3D } from 'three';
 import ObjectProperty from './ObjectProperty';
 import { getObjectNameByName } from '../../three/utils';
 import TreeList from './TreeList';
 
-let lastSelectDiv: (EventTarget & Element) | null = null;
 export default function OutlineView() {
   let [children, setChildren] = useState<Object3D[]>();
   let [curObj3d, setCurObj3d] = useState<Object3D>();
-  //  let curObj3d: Object3D | null = null;
-
-  const treeData = [
-    {
-      id: 1,
-      name: 'Node 1',
-      children: [
-        {
-          id: 2,
-          name: 'Node 1.1',
-          children: [
-            {
-              id: 3,
-              name: 'Node 1.1.1',
-            },
-          ],
-        },
-        {
-          id: 4,
-          name: 'Node 1.2',
-        },
-      ],
-    },
-    {
-      id: 5,
-      name: 'Node 2',
-      children: [
-        {
-          id: 6,
-          name: 'Node 2.1',
-        },
-      ],
-    },
-  ];
+  const [camera, setCamera] = useState<Camera | any>();
 
   useEffect(() => {
     const _children = getScene().children;
-
+    const _camera = getCamera();
+    _camera.userData.isSelected = false;
+    setCamera(_camera);
     setChildren(setD2(_children));
   }, []);
 
   function cameraDiv() {
-    const camera = getCamera();
-
     if (camera && camera.isCamera) {
       return (
         <ListGroup.Item
           as={'button'}
-          className=" d-flex justify-content-between"
-          onClick={(e) => {
-            if (lastSelectDiv !== null) {
-              lastSelectDiv.classList.remove('text-warning');
-            }
-            const curSel = e.currentTarget;
-            curSel.classList.add('text-warning');
-            lastSelectDiv = curSel;
+          className={`d-flex justify-content-between ${camera.userData.isSelected ? 'text-warning' : ''} `}
+          onClick={() => {
+            const _camera = { ...camera };
+            resetTextWarning(camera);
+            setCamera(_camera);
             setCurObj3d(camera);
           }}
         >
@@ -87,6 +43,49 @@ export default function OutlineView() {
         </ListGroup.Item>
       );
     }
+  }
+
+  function resetTextWarning(targetItem: Object3D | any, _children = children) {
+    if (targetItem.isCamera) {
+      targetItem.userData.isSelected = !targetItem.userData.isSelected;
+      setCamera(targetItem);
+    } else {
+      const _camera = { ...camera };
+      _camera.userData.isSelected = false;
+      setCamera(_camera);
+    }
+    if (_children === undefined) {
+      return;
+    }
+
+    return _children.map((item) => {
+      if (item.uuid === targetItem.uuid) {
+        item.userData.isSelected = true;
+      } else {
+        item.userData.isSelected = false;
+      }
+
+      if (item.children.length > 0) {
+        if (item.uuid === targetItem.uuid) {
+          item.userData.isSelected = true;
+        } else {
+          item.userData.isSelected = false;
+        }
+        resetTextWarning(targetItem, item.children);
+      }
+      return item;
+    });
+  }
+
+  function setD2(children: Object3D[], show = true) {
+    return children.map((item) => {
+      item.userData.show = show;
+
+      if (item.children.length > 0) {
+        setD2(item.children, false);
+      }
+      return item;
+    });
   }
 
   return (
@@ -109,7 +108,11 @@ export default function OutlineView() {
             <Card.Body>
               <ListGroup className="da-gang">
                 {children && (
-                  <TreeList data={children} setCurObj3d={setCurObj3d} />
+                  <TreeList
+                    data={children}
+                    setCurObj3d={setCurObj3d}
+                    resetTextWarning={resetTextWarning}
+                  />
                 )}
               </ListGroup>
             </Card.Body>
@@ -120,15 +123,4 @@ export default function OutlineView() {
       <ObjectProperty curObj3d={curObj3d} />
     </Accordion>
   );
-}
-export function setD2(children, show = true, isOpen = true) {
-  return children.map((item) => {
-    item.userData.show = show;
-    item.userData.isOpen = isOpen;
-    if (item.children.length > 0) {
-      item.userData.isOpen = false;
-      setD2(item.children, false);
-    }
-    return item;
-  });
 }

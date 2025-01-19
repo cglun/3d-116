@@ -51,3 +51,10 @@ h5 {
 svg{
   width: 1rem;
 }
+btn-group-sm > .btn, .btn-sm {
+  --bs-btn-padding-y: 0; 
+ 
+  --bs-btn-font-size:.8rem;
+  
+}
+ 

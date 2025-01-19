@@ -14,6 +14,7 @@
     "preview": "rsbuild preview"
   },
   "dependencies": {
+    "@module-federation/enhanced": "^0.8.9",
     "@tanstack/react-router": "^1.95.0",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
@@ -26,6 +27,7 @@
     "@biomejs/biome": "^1.9.3",
     "@eslint/compat": "^1.2.0",
     "@eslint/js": "^9.12.0",
+    "@module-federation/rsbuild-plugin": "^0.8.9",
     "@rsbuild/core": "^1.1.8",
     "@rsbuild/plugin-react": "^1.0.7",
     "@tanstack/router-plugin": "^1.95.1",

@@ -9,15 +9,28 @@ import ModalConfirm3d, {
 } from '../Modal/ModalConfirm3d';
 import { APP_COLOR } from '../../type';
 import AlertBase from '../AlertBase';
+import { Object3D } from 'three';
 
-const TreeNode = ({ node, setCurObj3d, onToggle }) => {
+const TreeNode = ({
+  node,
+  setCurObj3d,
+  onToggle,
+  resetTextWarning,
+}: {
+  node: Object3D;
+  setCurObj3d: (obj: Object3D) => void;
+  onToggle: (uuid: string, isExpanded: boolean) => void;
+  resetTextWarning: (targetItem: Object3D) => void;
+}) => {
   const hasChildren = node.children && node.children.length > 0;
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [delBtn, setDelBtn] = React.useState(false);
+  const [isSelected, setIsSelected] = useState(false);
 
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
-
+    resetTextWarning(node);
+    setIsSelected(!isSelected);
     setCurObj3d(node);
     onToggle(node.uuid, !isExpanded);
   };
@@ -28,7 +41,7 @@ const TreeNode = ({ node, setCurObj3d, onToggle }) => {
     <AlertBase type={APP_COLOR.Warning} text={'删除'} />,
   );
 
-  const delMesh = (e, item) => {
+  const delMesh = (e: Event, item: Object3D) => {
     e.stopPropagation();
     e.preventDefault();
     setModalBody(
@@ -37,7 +50,6 @@ const TreeNode = ({ node, setCurObj3d, onToggle }) => {
     setModalConfirm({
       ...ModalConfirmDefault,
       title: `删除`,
-      content: getObjectNameByName(item),
       show: true,
       onOk: () => {
         setModalConfirm({
@@ -58,7 +70,7 @@ const TreeNode = ({ node, setCurObj3d, onToggle }) => {
     return <i className={setClassName(logo)}></i>;
   }
 
-  const light = `d-flex justify-content-between ${isExpanded ? 'text-warning' : ''}`;
+  const light = `d-flex justify-content-between ${node.userData.isSelected ? 'text-warning' : ''}`;
   return (
     <>
       <ListGroupItem>
@@ -104,6 +116,7 @@ const TreeNode = ({ node, setCurObj3d, onToggle }) => {
                 node={child}
                 setCurObj3d={setCurObj3d}
                 onToggle={onToggle}
+                resetTextWarning={resetTextWarning}
               />
             ))}
           </div>
@@ -119,7 +132,15 @@ const TreeNode = ({ node, setCurObj3d, onToggle }) => {
   );
 };
 
-const TreeList = ({ data, setCurObj3d }) => {
+const TreeList = ({
+  data,
+  setCurObj3d,
+  resetTextWarning,
+}: {
+  data: Object3D[];
+  setCurObj3d: (obj: Object3D) => void;
+  resetTextWarning: (targetItem: Object3D) => void;
+}) => {
   return (
     <>
       {data.map((node) => (
@@ -128,6 +149,7 @@ const TreeList = ({ data, setCurObj3d }) => {
           node={node}
           onToggle={() => {}}
           setCurObj3d={setCurObj3d}
+          resetTextWarning={resetTextWarning}
         />
       ))}
     </>
