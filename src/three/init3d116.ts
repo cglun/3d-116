@@ -62,12 +62,14 @@ function addCube() {
   g.add(cube);
   g.add(cube2);
   scene.add(g);
+}
 
+function addLight() {
   // 添加正交光源
-  light = new DirectionalLight(0xffffff, 2.16);
+  const light = new DirectionalLight(0xffffff, 2.16);
   light.position.set(3, 3, 3);
   light.castShadow = true; // 开启投射阴影
-  light.lookAt(cube.position);
+  light.lookAt(0, 0, 0);
   scene.add(light);
 
   scene.add(new DirectionalLightHelper(light));
@@ -152,6 +154,7 @@ export {
   setScene,
   getScene,
   addCube,
+  addLight,
   setCamera,
   getCamera,
 };

@@ -18,13 +18,18 @@
   padding: 0;
 }
 .card-header,
-.list-group .d-flex > div:first-child ,.ellipsis-3d{
+.list-group .d-flex > div:first-child,
+.ellipsis-3d {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .outline-view .list-group .list-group-item {
-  padding: 0.1rem 0.2rem  ;
+  padding:.1rem .1rem .1rem 1rem;
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 0;
+ 
 }
 
 .my-card-body {
@@ -33,7 +38,7 @@
   overflow-y: scroll;
   scrollbar-width: thin;
 }
-.card-body img{
+.card-body img {
   width: 6rem;
 }
 .row {
@@ -42,19 +47,18 @@
 h5 {
   margin-bottom: 0;
 }
-.accordion-body{
-   padding:.5rem
+.accordion-body {
+  padding: 0.5rem;
 }
-.da-gang .list-group-item{
+.da-gang .list-group-item {
   cursor: pointer;
 }
-svg{
+svg {
   width: 1rem;
 }
-btn-group-sm > .btn, .btn-sm {
-  --bs-btn-padding-y: 0; 
- 
-  --bs-btn-font-size:.8rem;
-  
+btn-group-sm > .btn,
+.btn-sm {
+  --bs-btn-padding-y: 0;
+
+  --bs-btn-font-size: 0.8rem;
 }
- 

@@ -4,7 +4,7 @@ import { memo } from 'react';
 import { APP_COLOR, DELAY } from '../type';
 import { getClassNameByType, setClassName } from '../app/utils';
 /**
- * 消息提示
+ * 消息提示，子组件
  * @returns
  */
 export interface Toast {

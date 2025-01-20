@@ -8,10 +8,8 @@ import AlertBase from '../AlertBase';
 
 export interface ModalConfirm {
   title: string;
-
   show: boolean;
   type: APP_COLOR;
-
   onOk(): void;
 }
 export const ModalConfirmDefault: ModalConfirm = {
@@ -30,7 +28,9 @@ function ModalConfirm3d({
 }) {
   const { title, show, onOk } = modalConfirm;
   const themeColor = getThemeColor();
-  const onClose = () => {};
+  const onClose = () => {
+    setModalConfirm({ ...ModalConfirmDefault });
+  };
 
   return (
     show && (

@@ -5,7 +5,7 @@ import {
   WebGLRenderer,
 } from 'three';
 import {
-  addCube,
+  addLight,
   camera,
   createScene,
   getCamera,
@@ -75,7 +75,7 @@ export function init3d(canvas: React.RefObject<HTMLDivElement>) {
     } else {
       createScene(canvas.current);
 
-      addCube();
+      addLight();
     }
 
     window.addEventListener('resize', () =>
@@ -99,5 +99,7 @@ function onWindowResize(
     renderer.setSize(canvas.current.offsetWidth, canvas.current.offsetHeight); // 更新渲染器的大小
   }
 }
+
+//return scene.getObjectByProperty('uuid', uuid);
 
 export function loaderGlb() {}

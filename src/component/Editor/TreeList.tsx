@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, ListGroupItem } from 'react-bootstrap';
 import { setClassName } from '../../app/utils';
 import { getObjectNameByName } from '../../three/utils';
@@ -10,6 +10,8 @@ import ModalConfirm3d, {
 import { APP_COLOR } from '../../type';
 import AlertBase from '../AlertBase';
 import { Object3D } from 'three';
+import { getScene } from '../../three/init3d116';
+import { MyContext } from '../../app/MyContext';
 
 const TreeNode = ({
   node,
@@ -19,6 +21,7 @@ const TreeNode = ({
 }: {
   node: Object3D;
   setCurObj3d: (obj: Object3D) => void;
+
   onToggle: (uuid: string, isExpanded: boolean) => void;
   resetTextWarning: (targetItem: Object3D) => void;
 }) => {
@@ -26,7 +29,7 @@ const TreeNode = ({
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [delBtn, setDelBtn] = React.useState(false);
   const [isSelected, setIsSelected] = useState(false);
-
+  const { dispatchScene } = useContext(MyContext);
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
     resetTextWarning(node);
@@ -52,6 +55,24 @@ const TreeNode = ({
       title: `删除`,
       show: true,
       onOk: () => {
+        const scene = getScene();
+        const targetItem = scene.getObjectByProperty('uuid', item.uuid);
+        if (targetItem === undefined) {
+          return;
+        }
+        if (targetItem.parent == null) {
+          return;
+        }
+
+        targetItem.parent.remove(targetItem);
+        console.log(scene.children);
+        dispatchScene({
+          type: 'setScene',
+          payload: scene,
+        });
+        console.log('dispatchScene');
+
+        //  [...scene.children];
         setModalConfirm({
           ...ModalConfirmDefault,
           show: false,

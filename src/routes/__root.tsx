@@ -1,22 +1,23 @@
 import React from 'react';
 import { createRootRoute } from '@tanstack/react-router';
 import { Col, Container, Row } from 'react-bootstrap';
-import { initToast, MyContext } from '../app/MyContext';
+import { initScene, initToast, MyContext } from '../app/MyContext';
 import OutlineView from '../component/Editor/OutlineView';
 import Canvas3d from '../component/Editor/Canvas3d';
 import EditorTop from '../component/Editor/EditorTop';
 import BottomNav from '../component/Editor/BottomNav';
 import ToastExample from '../component/ToastExample';
-import reducerToast from '../app/reducer';
+import reducerToast, { reducerScene } from '../app/reducer';
 export const Route = createRootRoute({
   component: RootComponent,
 });
 
 function RootComponent() {
   const [toast, dispatchToast] = React.useReducer(reducerToast, initToast);
+  const [scene, dispatchScene] = React.useReducer(reducerScene, initScene);
   document.title = '3D116';
   return (
-    <MyContext value={{ toast, dispatchToast }}>
+    <MyContext value={{ toast, dispatchToast, scene, dispatchScene }}>
       <Container fluid>
         <Row>
           <Col>

@@ -4,7 +4,7 @@ import { useContext, memo } from 'react';
 import { APP_COLOR } from '../type';
 import { setClassName } from '../app/utils';
 /**
- * 消息提示
+ * 消息提示, 全局使用
  * @returns
  */
 

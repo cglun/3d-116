@@ -18,6 +18,7 @@ import { Route as rootRoute } from './routes/__root'
 
 const TreeLazyImport = createFileRoute('/tree')()
 const MarkLazyImport = createFileRoute('/mark')()
+const AddMeshLazyImport = createFileRoute('/addMesh')()
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 
@@ -34,6 +35,12 @@ const MarkLazyRoute = MarkLazyImport.update({
   path: '/mark',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/mark.lazy').then((d) => d.Route))
+
+const AddMeshLazyRoute = AddMeshLazyImport.update({
+  id: '/addMesh',
+  path: '/addMesh',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/addMesh.lazy').then((d) => d.Route))
 
 const AboutLazyRoute = AboutLazyImport.update({
   id: '/about',
@@ -65,6 +72,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
+    '/addMesh': {
+      id: '/addMesh'
+      path: '/addMesh'
+      fullPath: '/addMesh'
+      preLoaderRoute: typeof AddMeshLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/mark': {
       id: '/mark'
       path: '/mark'
@@ -87,6 +101,7 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
+  '/addMesh': typeof AddMeshLazyRoute
   '/mark': typeof MarkLazyRoute
   '/tree': typeof TreeLazyRoute
 }
@@ -94,6 +109,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
+  '/addMesh': typeof AddMeshLazyRoute
   '/mark': typeof MarkLazyRoute
   '/tree': typeof TreeLazyRoute
 }
@@ -102,22 +118,24 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
+  '/addMesh': typeof AddMeshLazyRoute
   '/mark': typeof MarkLazyRoute
   '/tree': typeof TreeLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/mark' | '/tree'
+  fullPaths: '/' | '/about' | '/addMesh' | '/mark' | '/tree'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/mark' | '/tree'
-  id: '__root__' | '/' | '/about' | '/mark' | '/tree'
+  to: '/' | '/about' | '/addMesh' | '/mark' | '/tree'
+  id: '__root__' | '/' | '/about' | '/addMesh' | '/mark' | '/tree'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   AboutLazyRoute: typeof AboutLazyRoute
+  AddMeshLazyRoute: typeof AddMeshLazyRoute
   MarkLazyRoute: typeof MarkLazyRoute
   TreeLazyRoute: typeof TreeLazyRoute
 }
@@ -125,6 +143,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   AboutLazyRoute: AboutLazyRoute,
+  AddMeshLazyRoute: AddMeshLazyRoute,
   MarkLazyRoute: MarkLazyRoute,
   TreeLazyRoute: TreeLazyRoute,
 }
@@ -141,6 +160,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/about",
+        "/addMesh",
         "/mark",
         "/tree"
       ]
@@ -150,6 +170,9 @@ export const routeTree = rootRoute
     },
     "/about": {
       "filePath": "about.lazy.tsx"
+    },
+    "/addMesh": {
+      "filePath": "addMesh.lazy.tsx"
     },
     "/mark": {
       "filePath": "mark.lazy.tsx"

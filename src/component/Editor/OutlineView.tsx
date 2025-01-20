@@ -1,25 +1,37 @@
-import { getCamera, getScene } from '../../three/init3d116';
+import { getCamera, getScene, setScene } from '../../three/init3d116';
 import { setClassName } from '../../app/utils';
 
 import { SPACE } from '../../app/config';
 import { Accordion, Card, ListGroup } from 'react-bootstrap';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Camera, Object3D } from 'three';
 import ObjectProperty from './ObjectProperty';
 import { getObjectNameByName } from '../../three/utils';
 import TreeList from './TreeList';
-
+import { MyContext } from '../../app/MyContext';
+let _setChildren: any;
+export function updateScene(scene: Object3D) {
+  // const _children = getScene().children;
+  // console.log(scene.children);
+  // debugger;
+  // _setChildren(scene.children);
+}
 export default function OutlineView() {
-  let [children, setChildren] = useState<Object3D[]>();
   let [curObj3d, setCurObj3d] = useState<Object3D>();
   const [camera, setCamera] = useState<Camera | any>();
-
+  const { scene, dispatchScene } = useContext(MyContext);
   useEffect(() => {
-    const _children = getScene().children;
     const _camera = getCamera();
     _camera.userData.isSelected = false;
     setCamera(_camera);
-    setChildren(setD2(_children));
+
+    const _scene = getScene();
+    _scene.children = setD2(_scene.children);
+
+    dispatchScene({
+      type: 'setScene',
+      payload: getScene(),
+    });
   }, []);
 
   function cameraDiv() {
@@ -45,7 +57,10 @@ export default function OutlineView() {
     }
   }
 
-  function resetTextWarning(targetItem: Object3D | any, _children = children) {
+  function resetTextWarning(
+    targetItem: Object3D | any,
+    _children = scene.payload.children,
+  ) {
     if (targetItem.isCamera) {
       targetItem.userData.isSelected = !targetItem.userData.isSelected;
       setCamera(targetItem);
@@ -107,11 +122,11 @@ export default function OutlineView() {
             <Card.Header className="text-center">网格</Card.Header>
             <Card.Body>
               <ListGroup className="da-gang">
-                {children && (
+                {scene.payload.children && (
                   <TreeList
-                    data={children}
                     setCurObj3d={setCurObj3d}
                     resetTextWarning={resetTextWarning}
+                    data={scene.payload.children}
                   />
                 )}
               </ListGroup>
