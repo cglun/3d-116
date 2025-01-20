@@ -37,7 +37,11 @@ function RootComponent() {
               </Col>
             </Row>
           </Col>
-          <Col xl={2} style={{ margin: 0, padding: 0 }}>
+          <Col
+            xl={2}
+            style={{ margin: 0, padding: 0 }}
+            className="my-card-body "
+          >
             <OutlineView></OutlineView>
           </Col>
         </Row>

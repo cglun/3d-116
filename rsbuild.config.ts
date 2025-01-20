@@ -23,7 +23,7 @@ export default defineConfig({
       //root: '../datav-assembly/webapp/',
       // root: './DATAV/dist/',
     },
-    assetPrefix: './', // 指定静态资源的相对路径前缀，
+    //assetPrefix: './', // 指定静态资源的相对路径前缀，
     // minify: {
     //   jsOptions: {
     //     exclude: /^\/src\//,

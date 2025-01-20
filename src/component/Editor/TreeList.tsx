@@ -44,7 +44,7 @@ const TreeNode = ({
     <AlertBase type={APP_COLOR.Warning} text={'删除'} />,
   );
 
-  const delMesh = (e: Event, item: Object3D) => {
+  const delMesh = (e: Event | any, item: Object3D) => {
     e.stopPropagation();
     e.preventDefault();
     setModalBody(

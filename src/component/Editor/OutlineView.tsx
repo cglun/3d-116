@@ -1,4 +1,9 @@
-import { getCamera, getScene, setScene } from '../../three/init3d116';
+import {
+  getCamera,
+  getScene,
+  setCamera,
+  setScene,
+} from '../../three/init3d116';
 import { setClassName } from '../../app/utils';
 
 import { SPACE } from '../../app/config';
@@ -9,21 +14,15 @@ import ObjectProperty from './ObjectProperty';
 import { getObjectNameByName } from '../../three/utils';
 import TreeList from './TreeList';
 import { MyContext } from '../../app/MyContext';
-let _setChildren: any;
-export function updateScene(scene: Object3D) {
-  // const _children = getScene().children;
-  // console.log(scene.children);
-  // debugger;
-  // _setChildren(scene.children);
-}
+
 export default function OutlineView() {
   let [curObj3d, setCurObj3d] = useState<Object3D>();
-  const [camera, setCamera] = useState<Camera | any>();
+  const [camera, _setCamera] = useState<Camera | any>();
   const { scene, dispatchScene } = useContext(MyContext);
   useEffect(() => {
     const _camera = getCamera();
     _camera.userData.isSelected = false;
-    setCamera(_camera);
+    _setCamera(_camera);
 
     const _scene = getScene();
     _scene.children = setD2(_scene.children);
@@ -34,41 +33,64 @@ export default function OutlineView() {
     });
   }, []);
 
-  function cameraDiv() {
-    if (camera && camera.isCamera) {
-      return (
+  function sceneDiv(object3D: Object3D | any) {
+    return (
+      object3D && (
         <ListGroup.Item
           as={'button'}
-          className={`d-flex justify-content-between ${camera.userData.isSelected ? 'text-warning' : ''} `}
+          className={`d-flex justify-content-between ${object3D.userData.isSelected ? 'text-warning' : ''} `}
           onClick={() => {
-            const _camera = { ...camera };
-            resetTextWarning(camera);
-            setCamera(_camera);
-            setCurObj3d(camera);
+            // const _object3D = { ...object3D };
+            resetTextWarning(object3D);
+
+            if (object3D.isScene || object3D.isCamera) {
+              if (object3D.isScene) {
+                object3D.userData.isSelected = !object3D.userData.isSelected;
+                setScene(object3D);
+                dispatchScene({
+                  type: 'setScene',
+                  payload: object3D,
+                });
+              }
+              if (object3D.isCamera) {
+                object3D.userData.isSelected = !object3D.userData.isSelected;
+                _setCamera(object3D);
+              }
+            }
+            setCurObj3d(object3D);
           }}
         >
           <div>
-            <i className={setClassName('camera-reels')}></i>
+            {object3D.isCamera ? (
+              <i className={setClassName('camera-reels')}></i>
+            ) : (
+              <i className={setClassName('box2')}></i>
+            )}
             {SPACE}
-            {getObjectNameByName(camera)}
+            {getObjectNameByName(object3D)}
           </div>
         </ListGroup.Item>
-      );
-    }
+      )
+    );
   }
 
   function resetTextWarning(
     targetItem: Object3D | any,
     _children = scene.payload.children,
   ) {
-    if (targetItem.isCamera) {
-      targetItem.userData.isSelected = !targetItem.userData.isSelected;
-      setCamera(targetItem);
-    } else {
-      const _camera = { ...camera };
-      _camera.userData.isSelected = false;
-      setCamera(_camera);
+    if (!targetItem.isCamera || !targetItem.isScene) {
+      const scene = getScene();
+      const camera = getCamera();
+      scene.userData.isSelected = false;
+      camera.userData.isSelected = false;
+      _setCamera(camera);
+      setCamera(camera);
+      dispatchScene({
+        type: 'setScene',
+        payload: scene,
+      });
     }
+
     if (_children === undefined) {
       return;
     }
@@ -114,10 +136,15 @@ export default function OutlineView() {
           <Card>
             <Card.Header className="text-center">相机</Card.Header>
             <Card.Body>
-              <ListGroup>{cameraDiv()}</ListGroup>
+              <ListGroup> {sceneDiv(camera)}</ListGroup>
             </Card.Body>
           </Card>
-
+          <Card>
+            <Card.Header className="text-center">场景</Card.Header>
+            <Card.Body>
+              <ListGroup>{sceneDiv(getScene())}</ListGroup>
+            </Card.Body>
+          </Card>
           <Card>
             <Card.Header className="text-center">网格</Card.Header>
             <Card.Body>

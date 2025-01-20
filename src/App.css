@@ -33,7 +33,7 @@
 }
 
 .my-card-body {
-  max-height: 100vh;
+  max-height: 96vh;
   overflow-y: hidden;
   overflow-y: scroll;
   scrollbar-width: thin;

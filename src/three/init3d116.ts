@@ -3,13 +3,13 @@ import {
   Camera,
   DirectionalLight,
   DirectionalLightHelper,
+  GridHelper,
   Group,
   Mesh,
   MeshLambertMaterial,
   Object3D,
   Object3DEventMap,
   PerspectiveCamera,
-  PlaneGeometry,
   Scene,
   WebGLRenderer,
 } from 'three';
@@ -71,8 +71,9 @@ function addLight() {
   light.castShadow = true; // 开启投射阴影
   light.lookAt(0, 0, 0);
   scene.add(light);
-
-  scene.add(new DirectionalLightHelper(light));
+  const dh = new DirectionalLightHelper(light);
+  dh.name = '灯光辅助';
+  scene.add(dh);
 
   // 设置阴影参数
   light.shadow.mapSize.width = 2048; // 阴影图的宽度
@@ -84,15 +85,11 @@ function addLight() {
   light.shadow.camera.top = 10;
   light.shadow.camera.bottom = -10;
 
-  // 创建地面
-  const planeGeometry = new PlaneGeometry(10, 10);
-  const planeMaterial = new MeshLambertMaterial({ color: 0xdddddd });
-  const plane = new Mesh(planeGeometry, planeMaterial);
-  plane.receiveShadow = true; // 地面接收阴影
-  plane.castShadow = true;
-  plane.rotation.x = -Math.PI / 2;
-  plane.position.y = -0.5;
-  scene.add(plane);
+  const size = 10;
+  const divisions = 10;
+
+  const gridHelper = new GridHelper(size, divisions);
+  scene.add(gridHelper);
 }
 
 function createScene(node: HTMLDivElement) {
@@ -106,7 +103,7 @@ function createScene(node: HTMLDivElement) {
 
   renderer.setSize(node.offsetWidth, node.offsetHeight);
   camera.position.set(-5, 5, 8);
-
+  scene.userData.isSelected = false;
   node.appendChild(renderer.domElement);
   addOrbitControls();
   addGlb();
